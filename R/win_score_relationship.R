@@ -7,7 +7,7 @@ library(tidyverse)
 
 # Access nflWAR:
 # install.packages("devtools")
-# devtools::install.packages("ryurko/nflWAR")
+# devtools::install_github("ryurko/nflWAR")
 library(nflWAR)
 
 # Get the nine season summaries for the 32 teams using the get_season_summary()
