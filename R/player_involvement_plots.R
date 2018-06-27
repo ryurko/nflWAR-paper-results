@@ -76,15 +76,14 @@ te_team_tables <- map_dfr(c(2009:2017),
 
 qb_team_tables %>%
   bind_rows(rb_team_tables, wr_team_tables, te_team_tables) %>%
-  ggplot(aes(y = Position, x = Perc_Total_Plays, fill = Position,
-             height = ..density..)) +
-  geom_density_ridges(stat = "density", alpha = 0.7, scale = 1.5) +
+  ggplot(aes(y = Position, x = Perc_Total_Plays, fill = Position )) +
+  geom_density_ridges(alpha = 0.7, scale = 1.5, from = 0, to = 1) +
   theme_bw() +
   scale_fill_brewer(palette = "Set1") + 
   facet_wrap(~ Season, ncol = 3) +
   labs(x = "Proportion of offensive plays a player is directly involved in",
        y = "Position", fill = "Position") + 
-  theme(axis.text.x = element_text(size = 14, angle = 90),
+  theme(axis.text.x = element_text(size = 14),
         axis.text.y = element_text(size = 16),
         axis.title = element_text(size = 18),
         legend.title = element_text(size = 18),
@@ -92,6 +91,6 @@ qb_team_tables %>%
         strip.background = element_blank(),
         strip.text = element_text(size = 18),
         legend.position = "bottom") +
-  scale_x_continuous(expand = c(0.01, 0)) +
+  scale_x_continuous(breaks = c(0, .5, 1)) +
   scale_y_discrete(expand = c(0.01, 0))
 
