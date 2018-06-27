@@ -9,6 +9,10 @@ library(tidyverse)
 # devtools::install.packages("ryurko/nflWAR")
 library(nflWAR)
 
+# Access ggridges:
+# install.packages("ggridges")
+library(ggridges)
+
 # Create the position team tables for each season using the pipeline of functions
 # available in the nflWAR package, first for QB:
 qb_team_tables <- map_dfr(c(2009:2017), 
@@ -67,24 +71,27 @@ te_team_tables <- map_dfr(c(2009:2017),
                               dplyr::select(Season, Position, Perc_Total_Plays)
                             })
 
-# Row bind together then make the violin plots with boxplot to compare the 
+# Row bind together then make the ridge plots compare the 
 # distributions for each year:
 
 qb_team_tables %>%
   bind_rows(rb_team_tables, wr_team_tables, te_team_tables) %>%
-  ggplot(aes(x = Position, y = Perc_Total_Plays)) +
-  geom_violin(aes(fill = Position)) + geom_boxplot(width = 0.1) +
+  ggplot(aes(y = Position, x = Perc_Total_Plays, fill = Position,
+             height = ..density..)) +
+  geom_density_ridges(stat = "density", alpha = 0.7, scale = 1.5) +
   theme_bw() +
   scale_fill_brewer(palette = "Set1") + 
-  coord_flip() + facet_wrap(~ Season, ncol = 3) +
-  labs(y = "Proportion of offensive plays a player is directly involved in",
-       x = "Position", fill = "Position") + 
-  theme(axis.text.x = element_text(size = 16, angle = 90),
+  facet_wrap(~ Season, ncol = 3) +
+  labs(x = "Proportion of offensive plays a player is directly involved in",
+       y = "Position", fill = "Position") + 
+  theme(axis.text.x = element_text(size = 14, angle = 90),
         axis.text.y = element_text(size = 16),
         axis.title = element_text(size = 18),
         legend.title = element_text(size = 18),
         legend.text = element_text(size = 16),
         strip.background = element_blank(),
         strip.text = element_text(size = 18),
-        legend.position = "bottom")
+        legend.position = "bottom") +
+  scale_x_continuous(expand = c(0.01, 0)) +
+  scale_y_discrete(expand = c(0.01, 0))
 
