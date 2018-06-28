@@ -1,4 +1,4 @@
-# File generates the single season nflWAR estimates
+# File generates and saves the single season nflWAR estimates
 
 # Access tidyverse:
 # install.packages("tidyverse")
